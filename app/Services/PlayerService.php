@@ -34,4 +34,36 @@ class PlayerService {
 
         return $player;
     }
+
+    public function update($id, $player)
+    {
+        $fields = [];
+
+        $updatableFields = [
+            'first_name',
+            'middle_name',
+            'last_name',
+            'dob',
+            'height',
+            'weight',
+            'college_id',
+        ];
+
+        foreach ($player as $key => $value) {
+            if (in_array($key, $updatableFields)) {
+                $fields[$key] = $value;
+            }
+        }
+
+        $affectedRows = $this->player->where('id', $id)->update($fields);
+
+        return $affectedRows;
+    }
+
+    public function delete($id)
+    {
+        $affectedRows = $this->player->destroy($id);
+
+        return $affectedRows;
+    }
 }

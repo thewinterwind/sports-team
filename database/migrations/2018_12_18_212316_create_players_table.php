@@ -23,6 +23,7 @@ class CreatePlayersTable extends Migration
             $table->integer('weight'); // lbs
             $table->integer('college_id')->nullable(); // lbs
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

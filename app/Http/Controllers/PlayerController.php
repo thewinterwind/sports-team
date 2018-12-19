@@ -83,7 +83,7 @@ class PlayerController extends Controller
 
         return [
             'status' => 'success',
-            'results' => $player,
+            'player' => $player,
         ];
     }
 
@@ -118,7 +118,28 @@ class PlayerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'string|nullable',
+            'last_name' => 'string|nullable',
+            'dob' => 'string|nullable',
+            'height' => 'integer|nullable',
+            'weight' => 'integer|nullable',
+            'college_id' => 'integer|nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => snake_case($validator->errors()->first()),
+            ], 400);
+        }
+
+        $affectedRows = $this->player->update($id, $request->all());
+
+        return [
+            'status' => 'success',
+            'affected_rows' => $affectedRows,
+        ];
     }
 
     /**
@@ -129,6 +150,18 @@ class PlayerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if ($id < 1) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'id_required',
+            ], 400);
+        }
+
+        $affectedRows = $this->player->delete($id);
+
+        return [
+            'status' => 'success',
+            'affected_rows' => $affectedRows,
+        ];
     }
 }
